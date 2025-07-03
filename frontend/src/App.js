@@ -12,6 +12,7 @@ function App() {
   }, []);
 
   const addTask = () => {
+    if (description.trim() === '') return;
     axios.post(`${API}/tasks`, { description }).then((res) => {
       setTasks([...tasks, res.data]);
       setDescription('');
@@ -25,15 +26,38 @@ function App() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>To-do List</h1>
-      <input value={description} onChange={(e) => setDescription(e.target.value)} />
-      <button onClick={addTask}>Adicionar</button>
-      <ul>
-        {tasks.map((task) => (
-          <li key={task.id}>{task.description} <button onClick={() => deleteTask(task.id)}>X</button></li>
-        ))}
-      </ul>
+    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
+      <h1>Trabalho APAW</h1>
+      <input
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Digite a tarefa"
+        style={{ marginRight: '1rem', padding: '0.5rem' }}
+      />
+      <button onClick={addTask} style={{ padding: '0.5rem' }}>
+        Adicionar
+      </button>
+
+      <table border="1" cellPadding="8" style={{ marginTop: '2rem', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Descrição</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tasks.map((task, index) => (
+            <tr key={task.id}>
+              <td>{index + 1}</td>
+              <td>{task.description}</td>
+              <td>
+                <button onClick={() => deleteTask(task.id)}>Excluir</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
